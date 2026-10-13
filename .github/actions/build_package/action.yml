@@ -159,7 +159,7 @@ runs:
         cd ${INPUTS_PKG_DIR}
 
         # GitHub Actions container jobs use HOME=/github/home by default, but the
-        # builder images bake the sbuild config and unshare tarballs under /root.
+        # builder images bake the unshare tarballs under /root.
         export HOME=/root
 
         if [[ "${INPUTS_RUN_LINTIAN}" == "true" ]]; then
@@ -214,6 +214,7 @@ runs:
                    $lintian_flag \
                    --build-dir "$BUILD_DIR_ABS" \
                    --build-dep-resolver=apt \
+                   --chroot-mode=unshare \
                    "$DSC_FILE"
           else
             # ℹ️ Prebuilt mode + native source format: invoke sbuild directly —
@@ -226,7 +227,8 @@ runs:
                    --dist=${INPUTS_SUITE} \
                    $lintian_flag \
                    --build-dir "$BUILD_DIR_ABS" \
-                   --build-dep-resolver=apt
+                   --build-dep-resolver=apt \
+                   --chroot-mode=unshare
           fi
 
         else
@@ -287,6 +289,7 @@ runs:
                  $lintian_flag \
                  --build-dir "$BUILD_DIR_ABS" \
                  --build-dep-resolver=apt \
+                 --chroot-mode=unshare \
                  "$DSC_FILE"
         fi
 
